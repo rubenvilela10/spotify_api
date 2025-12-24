@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :auth do
       get 'spotify', to: 'spotify#redirect'
-      get 'spotify/callback', to: 'spotify#callback'
+      get 'spotify/callback', to: 'spotify#callback', defaults: { format: :json }
     end
   end
 end
