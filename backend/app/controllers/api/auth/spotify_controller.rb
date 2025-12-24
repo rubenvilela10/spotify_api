@@ -25,7 +25,21 @@ class Api::Auth::SpotifyController < ApplicationController
 
     tokens = JSON.parse(response.body)
 
-    render json: tokens
+    headers = { "Authorization" => "Bearer #{tokens['access_token']}"}
+    profile = HTTParty.get('https://api.spotify.com/v1/me', headers: headers).parsed_response
+
+
+    # find or create user
+    user = User.find_or_create_by(spotify_id: profile['id'])
+    user.update!(
+      name: profile['display_name'],
+      email: profile['email'],
+      access_token: profile['access_token'],
+      refresh_token: profile['refresh_token'],
+      token_expires_at: Time.now + tokens['expires_in'].to_i.seconds
+    )
+
+    render json: { user: user, tokens: tokens }
   end
 
 
