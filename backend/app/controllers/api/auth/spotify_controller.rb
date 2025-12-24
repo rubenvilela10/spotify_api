@@ -70,6 +70,8 @@ class Api::Auth::SpotifyController < ApplicationController
       token_expires_at: Time.now + tokens['expires_in'].to_i.seconds
     )
 
+    session[:user_id] = user.id
+
     render json: { user: user, tokens: tokens }
   end
 end
