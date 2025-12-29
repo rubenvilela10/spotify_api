@@ -25,7 +25,7 @@ class Api::Auth::SpotifyController < ApplicationController
     uri = URI('https://accounts.spotify.com/api/token')
     params = {
       grant_type: 'authorization_code',
-      code: code,  # usa a variável code, não params[:code]
+      code: code,
       redirect_uri: ENV['SPOTIFY_REDIRECT_URI'],
       client_id: ENV['SPOTIFY_CLIENT_ID'],
       client_secret: ENV['SPOTIFY_CLIENT_SECRET']
@@ -58,7 +58,6 @@ class Api::Auth::SpotifyController < ApplicationController
     end
 
     profile = JSON.parse(profile_response.body)
-    puts "DEBUG: Spotify profile response -> #{profile.inspect}"
 
     # find or create user
     user = User.find_or_initialize_by(spotify_id: profile['id'])
@@ -70,8 +69,14 @@ class Api::Auth::SpotifyController < ApplicationController
       token_expires_at: Time.now + tokens['expires_in'].to_i.seconds
     )
 
-    session[:user_id] = user.id
-
-    render json: { user: user, tokens: tokens }
+    jwt = JwtService.encode({
+      user_id: user.id,
+      spotify_id: user.spotify_id
+    })
+    
+    frontend_url = ENV.fetch('FRONTEND_URL', 'http://localhost:5173')
+    
+    redirect_to "#{frontend_url}/auth/callback?token=#{jwt}",
+      allow_other_host: true
   end
 end

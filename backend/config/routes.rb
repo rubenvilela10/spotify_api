@@ -10,7 +10,8 @@ Rails.application.routes.draw do
   # 
   namespace :api do
     get 'me', to: 'users#me'
-    
+    get '/home', to: 'home#index'
+
     namespace :auth do
       get 'spotify', to: 'spotify#redirect'
       get 'spotify/callback', to: 'spotify#callback', defaults: { format: :json }
