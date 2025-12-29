@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   namespace :api do
     get 'me', to: 'users#me'
     get '/home', to: 'home#index'
+    get 'search', to: 'search#index'
 
     namespace :auth do
       get 'spotify', to: 'spotify#redirect'
