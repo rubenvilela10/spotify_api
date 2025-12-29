@@ -1,27 +1,43 @@
+# app/controllers/api/home_controller.rb
 class Api::HomeController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    artists_uri = URI("https://api.spotify.com/v1/me/top/artists?limit=5")
-    artists_response = Net::HTTP.start(artists_uri.host, artists_uri.port, use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE) do |http|
-      request = Net::HTTP::Get.new(artists_uri)
-      request['Authorization'] = "Bearer #{current_user.access_token}"
-      http.request(request)
+    # GET top artists
+    artists = fetch_spotify_data("https://api.spotify.com/v1/me/top/artists?limit=5")
+    # GET top tracks
+    tracks = fetch_spotify_data("https://api.spotify.com/v1/me/top/tracks?limit=5")
+
+    render json: {
+      user: {
+        id: current_user.id,
+        name: current_user.name,
+        email: current_user.email,
+        spotify_id: current_user.spotify_id
+      },
+      top_artists: artists,
+      top_tracks: tracks
+    }
+  end
+
+  private
+
+  def fetch_spotify_data(url)
+    uri = URI(url)
+    response = Net::HTTP.start(uri.host, uri.port, use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE) do |http|
+      req = Net::HTTP::Get.new(uri)
+      req['Authorization'] = "Bearer #{current_user.access_token}"
+      http.request(req)
     end
 
-    artists = JSON.parse(artists_response.body)['items']
-
-
-    tracks_uri= URI("https://api.spotify.com/v1/me/top/tracks?limit=5")
-    tracks_response = Net::HTTP.start(tracks_uri.host, tracks_uri.port, use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE) do |http|
-      request = Net::HTTP::Get.new(tracks_uri)
-      request['Authorization'] = "Bearer #{current_user.access_token}"
-      http.request(request)
+    if response.code.to_i == 200
+      JSON.parse(response.body)['items'] || []
+    else
+      Rails.logger.error("Spotify API error #{response.code}: #{response.body}")
+      []
     end
-
-    tracks = JSON.parse(tracks_response.body)['items']
-
-
-    render json: {user: current_user, top_artists: artists, top_tracks:tracks}
+  rescue StandardError => e
+    Rails.logger.error("Spotify request failed: #{e.message}")
+    []
   end
 end

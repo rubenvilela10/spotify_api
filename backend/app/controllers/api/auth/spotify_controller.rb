@@ -7,7 +7,7 @@ class Api::Auth::SpotifyController < ApplicationController
     query = {
       response_type: 'code',
       client_id: ENV['SPOTIFY_CLIENT_ID'],
-      scope: 'user-read-email user-read-private', # permissions
+      scope: 'user-read-email user-read-private user-top-read', # permissions
       redirect_uri: ENV['SPOTIFY_REDIRECT_URI']
     }.to_query
 
