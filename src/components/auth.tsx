@@ -1,21 +1,20 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { setToken } from "../lib/auth";
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-export default function Auth() {
-    const navigate = useNavigate();
+export default function AuthCallback() {
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search)
-        const token = params.get('token')
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const token = urlParams.get('token');
+    if (token) {
+      localStorage.setItem('jwt', token);
+      navigate('/home');
+    } else {
+        console.error("No token found");
+    }
+    navigate('/home')
+  }, [navigate])
 
-        if(token) {
-            setToken(token)
-            navigate('/')
-        } else {
-            navigate('/login')
-        }
-    }, [])
-
-    return <p>Authenticating ...</p>
+  return <p>Logging in...</p>
 }
