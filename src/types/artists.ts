@@ -1,4 +1,10 @@
 export interface Artists {
-    id: string,
+    id: string
     name: string
+    images?: {
+        url: string
+        height?: number
+        width?: number
+    }[]
+    genres?: string[]
 }

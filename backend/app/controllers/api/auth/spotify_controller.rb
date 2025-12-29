@@ -64,6 +64,7 @@ class Api::Auth::SpotifyController < ApplicationController
     user.update(
       name: profile['display_name'],
       email: profile['email'],
+      avatar: profile.dig('images', 0, 'url'),
       access_token: access_token,
       refresh_token: refresh_token,
       token_expires_at: Time.now + tokens['expires_in'].to_i.seconds

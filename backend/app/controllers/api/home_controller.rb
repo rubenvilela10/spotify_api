@@ -13,7 +13,8 @@ class Api::HomeController < ApplicationController
         id: current_user.id,
         name: current_user.name,
         email: current_user.email,
-        spotify_id: current_user.spotify_id
+        spotify_id: current_user.spotify_id,
+        avatar: current_user.avatar
       },
       top_artists: artists,
       top_tracks: tracks

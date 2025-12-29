@@ -1,4 +1,5 @@
 import type { User } from '../types/user'
+import SearchBar from './searchbar'
 
 interface NavbarProps {
   user: User | null
@@ -9,24 +10,20 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
   return (
     <nav className="w-full bg-neutral-950 border-b border-neutral-800 px-6 py-4 flex items-center justify-between">
       {/* Logo */}
-      <div className="text-xl font-bold text-green-500">
-        Spotify App
+      <div className="w-8 h-8">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify" className='w-full h-full' />
       </div>
 
       {/* Right side */}
       {user ? (
         <div className="flex items-center gap-4">
           {/* Search */}
-          <input
-            type="text"
-            placeholder="Search songs, artists..."
-            className="px-4 py-2 rounded-full bg-neutral-800 text-sm text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
+          <SearchBar />
 
           {/* User */}
           <div className="flex items-center gap-2">
             <img
-              src="https://avatars.githubusercontent.com/u/1?v=4"
+              src={user.avatar || ''}
               alt="avatar"
               className="w-8 h-8 rounded-full"
             />
