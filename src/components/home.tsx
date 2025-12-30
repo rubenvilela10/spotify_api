@@ -3,11 +3,13 @@ import type { HomeResponse, User } from '../types/user'
 import type { Artists } from '../types/artists'
 import type { Tracks } from '../types/tracks'
 import { Link } from 'react-router-dom'
+import type { Albums } from '../types/albums'
 
 export default function HomePage() {
   const [user, setUser] = useState<User | null>(null)
   const [artists, setArtists] = useState<Artists[]>([])
   const [tracks, setTracks] = useState<Tracks[]>([])
+  const [albums, setAlbums] = useState<Albums[]>([])
 
   useEffect(() => {
     const fetchHome = async () => {
@@ -30,6 +32,7 @@ export default function HomePage() {
         setUser(data.user)
         setArtists(data.top_artists)
         setTracks(data.top_tracks)
+        setAlbums(data.top_albums)
       } catch (e) {
         console.error(e)
       }
@@ -90,6 +93,53 @@ export default function HomePage() {
                 <p className="text-sm text-neutral-400 truncate">
                   {track.artists.map(a => a.name).join(', ')}
                 </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Albums */}
+        <section className="mt-12">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-semibold text-2xl">Saved Albums</h3>
+            <span className="text-sm text-neutral-400">{albums.length} albums</span>
+          </div>
+
+          <div className="flex space-x-4 overflow-x-auto py-2 scrollbar-thin scrollbar-thumb-neutral-700 scrollbar-track-neutral-800">
+            {albums.map(album => (
+              <Link
+                to={`/albums/${album.id}`}
+                key={album.id}
+                className="flex-none w-48 bg-neutral-800 rounded-lg shadow hover:bg-neutral-700 transition"
+              >
+                {/* Cover */}
+                <div className="relative">
+                  {album.images?.[0]?.url ? (
+                    <img
+                      src={album.images[0].url}
+                      alt={album.name}
+                      className="w-full h-48 object-cover rounded-t-lg"
+                    />
+                  ) : (
+                    <div className="w-full h-48 bg-neutral-700 rounded-t-lg" />
+                  )}
+                </div>
+
+                {/* Info */}
+                <div className="p-4 space-y-1">
+                  <p className="font-semibold truncate">{album.name}</p>
+
+                  <p className="text-sm text-neutral-400 truncate">
+                    {album.artists.map(a => a.name).join(', ')}
+                  </p>
+
+                  <div className="flex items-center justify-between text-xs text-neutral-500 pt-2">
+                    <span>{album.release_date?.slice(0, 4) || '—'}</span>
+                    {album.total_tracks && (
+                      <span>{album.total_tracks} tracks</span>
+                    )}
+                  </div>
+                </div>
               </Link>
             ))}
           </div>

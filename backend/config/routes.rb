@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     get 'search', to: 'search#index'
 
     resources :artists, only: [:show]
+    resources :albums, only: [:show]
     resources :tracks, only: [:show]
 
     namespace :auth do

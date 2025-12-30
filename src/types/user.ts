@@ -1,3 +1,4 @@
+import type { Albums } from "./albums"
 import type { Artists } from "./artists"
 import type { Tracks } from "./tracks"
 
@@ -12,4 +13,5 @@ export interface HomeResponse {
     user: User
     top_artists: Artists[]
     top_tracks: Tracks[]
+    top_albums: Albums[]
 }

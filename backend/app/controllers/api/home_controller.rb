@@ -6,6 +6,7 @@ class Api::HomeController < ApplicationController
 
     artists_response = spotify.get('/me/top/artists', limit: 5)
     tracks_response  = spotify.get('/me/top/tracks', limit: 5)
+    albums_response  = spotify.get('/me/albums', limit: 10)
 
     render json: {
       user: {
@@ -16,7 +17,8 @@ class Api::HomeController < ApplicationController
         avatar: current_user.avatar
       },
       top_artists: artists_response['items'] || [],
-      top_tracks: tracks_response['items'] || []
+      top_tracks: tracks_response['items'] || [],
+      top_albums: albums_response['items'] || [],
     }
   end
 end

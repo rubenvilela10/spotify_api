@@ -1,3 +1,5 @@
+import type { Artists } from "./artists"
+
 export interface Albums {
     id: string
     name: string
@@ -7,4 +9,6 @@ export interface Albums {
       width?: number
     }[]
     release_date: string
+    artists: Artists[]
+    total_tracks: number
   }
