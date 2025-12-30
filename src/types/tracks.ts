@@ -3,13 +3,16 @@ export interface Tracks {
     id: string
     name: string
     artists: Artists[]
-    album?: {
+    album: {
       id: string
       name: string
-      images?: {
+      images: {
         url: string
         height?: number
         width?: number
       }[]
     }
-  }
+    duration_ms: number
+    popularity: number
+    preview_url: string | null
+}

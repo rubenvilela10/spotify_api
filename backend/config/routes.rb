@@ -13,6 +13,9 @@ Rails.application.routes.draw do
     get '/home', to: 'home#index'
     get 'search', to: 'search#index'
 
+    resources :artists, only: [:show]
+    resources :tracks, only: [:show]
+
     namespace :auth do
       get 'spotify', to: 'spotify#redirect'
       get 'spotify/callback', to: 'spotify#callback', defaults: { format: :json }
