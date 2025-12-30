@@ -15,4 +15,5 @@ export interface Tracks {
     duration_ms: number
     popularity: number
     preview_url: string | null
+    track_number: number
 }

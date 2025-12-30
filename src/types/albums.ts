@@ -1,4 +1,5 @@
 import type { Artists } from "./artists"
+import type { Tracks } from "./tracks"
 
 export interface Albums {
     id: string
@@ -10,5 +11,6 @@ export interface Albums {
     }[]
     release_date: string
     artists: Artists[]
+    tracks: Tracks[]
     total_tracks: number
   }

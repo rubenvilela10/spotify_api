@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import Navbar from './navbar'
-import type { User } from '../types/user'
 import type { Tracks } from '../types/tracks'
 
 
 export default function Tracks() {
   const { id } = useParams<{ id: string }>()
   const [track, setTrack] = useState<Tracks | null>(null)
-  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
     const fetchTrack = async () => {
