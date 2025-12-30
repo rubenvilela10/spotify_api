@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import Navbar from './navbar'
 import type { HomeResponse, User } from '../types/user'
 import type { Artists } from '../types/artists'
 import type { Tracks } from '../types/tracks'
@@ -39,16 +38,10 @@ export default function HomePage() {
     fetchHome()
   }, [])
 
-  const handleLogout = async () => {
-    localStorage.removeItem('jwt')
-    setUser(null)
-  }
-
   if (!user) return <p className="text-center mt-20 text-lg">Loading...</p>
 
   return (
     <div className="min-h-screen bg-neutral-900 text-white">
-      <Navbar user={user} onLogout={handleLogout} />
       <main className="p-8 max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold mb-6">Welcome, {user.name}</h2>
 
