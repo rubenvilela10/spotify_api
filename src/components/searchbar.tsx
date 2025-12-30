@@ -1,9 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function SearchBar() {
   const [query, setQuery] = useState('')
   const [result, setResult] = useState<any[]>([])
   const wrapperRef = useRef<HTMLDivElement>(null)
+  
+  const routeMap: Record<string, string> = {
+    artist: 'artists',
+    track: 'tracks',
+    album: 'albums',
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -74,7 +81,8 @@ export default function SearchBar() {
       {result.length > 0 && (
         <div className="absolute mt-1 w-full bg-neutral-900 border border-neutral-700 rounded-lg max-h-120 overflow-y-auto z-50">
           {result.map(item => (
-            <div
+            <Link
+            to={`/${routeMap[item.type]}/${item.id}`}
               key={item.id}
               className="px-4 py-2 hover:bg-neutral-800 cursor-pointer flex items-center gap-3"
             >
@@ -86,7 +94,7 @@ export default function SearchBar() {
                 />
               )}
               <span className="text-sm">{item.name}</span>
-            </div>
+            </Link>
           ))}
         </div>
       )}

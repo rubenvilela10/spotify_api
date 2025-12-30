@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import type { Albums } from '../types/albums'
 import type { Tracks } from '../types/tracks'
@@ -129,7 +129,8 @@ function Albums({ albums }: { albums: Albums[] }) {
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
         {albums.map(album => (
-          <div
+          <Link
+          to={`/albums/${album.id}`}
             key={album.id}
             className="bg-neutral-800 p-4 rounded-lg hover:bg-neutral-700 transition"
           >
@@ -147,7 +148,7 @@ function Albums({ albums }: { albums: Albums[] }) {
             <p className="text-sm text-neutral-400">
               {album.release_date ? album.release_date.slice(0, 4) : '----'}
             </p>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

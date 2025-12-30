@@ -35,7 +35,6 @@ export default function Tracks() {
 
   return (
     <div className="min-h-screen bg-neutral-900 text-white">
-      <Navbar user={user} onLogout={() => setUser(null)} />
       <main className="p-8 max-w-4xl mx-auto">
         <div className="flex gap-6">
           <img
