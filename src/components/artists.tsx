@@ -85,7 +85,8 @@ function TopTracks({ tracks }: { tracks: Tracks[] }) {
 
       <div className="space-y-3">
         {tracks.map((track, i) => (
-          <div
+          <Link
+            to={`/tracks/${track.id}`}
             key={track.id}
             className="flex items-center gap-4 px-4 py-2 rounded-md hover:bg-neutral-800"
           >
@@ -108,7 +109,7 @@ function TopTracks({ tracks }: { tracks: Tracks[] }) {
             <span className="text-neutral-400 text-sm">
               {track.duration_ms ? msToTime(track.duration_ms) : '0:00'}
             </span>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import type { Tracks } from '../types/tracks'
-
+import { usePlayer } from '../context/PlayerContext'
 
 export default function Tracks() {
   const { id } = useParams<{ id: string }>()
   const [track, setTrack] = useState<Tracks | null>(null)
+  const { currentTrack, isPlaying, play, toggle } = usePlayer()
 
   useEffect(() => {
     const fetchTrack = async () => {
@@ -28,44 +29,85 @@ export default function Tracks() {
     fetchTrack()
   }, [id])
 
-  if (!track) return <p className="text-center mt-20 text-lg">Loading track...</p>
+  if (!track)
+    return <p className="text-center mt-20 text-lg text-neutral-400">Loading track...</p>
 
   return (
     <div className="min-h-screen bg-neutral-900 text-white">
-      <main className="p-8 max-w-4xl mx-auto">
-        <div className="flex gap-6">
+      {/* Header / Hero */}
+      <div className="bg-gradient-to-b from-neutral-700/40 to-neutral-900">
+        <div className="max-w-6xl mx-auto px-8 py-16 flex gap-8 items-end">
           <img
             src={track.album.images[0]?.url}
             alt={track.name}
-            className="w-64 h-64 object-cover rounded-md"
+            className="w-60 h-60 object-cover rounded shadow-2xl"
           />
-          <div className="flex-1 flex flex-col justify-between">
-            <h1 className="text-3xl font-bold">{track.name}</h1>
-            <p className="text-lg text-neutral-400">
-              Album: {track.album.name}
-            </p>
-            <p className="text-lg text-neutral-400">
-              Artists:{' '}
-              {track.artists.map((a) => (
-                <Link key={a.id} to={`/artists/${a.id}`} className="hover:underline">
-                  {a.name}
-                </Link>
-              )).reduce((prev, curr) => [prev, ', ', curr] as any)}
-            </p>
-            <p className="text-lg text-neutral-400">
-              Duration: {Math.floor(track.duration_ms / 60000)}:
-              {Math.floor((track.duration_ms % 60000) / 1000)
-                .toString()
-                .padStart(2, '0')}
-            </p>
-            <p className="text-lg text-neutral-400">Popularity: {track.popularity}</p>
 
-            {track.preview_url && (
-              <audio controls className="mt-4 w-full">
-                <source src={track.preview_url} type="audio/mpeg" />
-                Your browser does not support the audio element.
-              </audio>
-            )}
+          <div>
+            <p className="uppercase text-sm tracking-wide text-neutral-300 mb-2">
+              Track
+            </p>
+
+            <h1 className="text-5xl font-extrabold leading-tight mb-4">
+              {track.name}
+            </h1>
+
+            <div className="flex items-center gap-2 text-neutral-300 text-sm">
+              <span className="font-semibold text-white">
+                {track.artists[0].name}
+              </span>
+              <span>•</span>
+              <span>{track.album.name}</span>
+              <span>•</span>
+              <span>
+                {Math.floor(track.duration_ms / 60000)}:
+                {Math.floor((track.duration_ms % 60000) / 1000)
+                  .toString()
+                  .padStart(2, '0')}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <main className="max-w-6xl mx-auto px-8 py-10">
+        <div className="flex flex-col gap-6">
+          {/* Actions */}
+          {track.preview_url ? (
+            <button
+              onClick={() =>
+                currentTrack?.id === track.id && isPlaying ? toggle() : play(track)
+              }
+              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+            >
+              {currentTrack?.id === track.id && isPlaying ? 'Pause' : 'Play'}
+            </button>
+          ) : (
+            <span className='text-neutral-500'>No preview available</span>
+          )}
+
+          {/* Info */}
+          <div className="text-neutral-300 space-y-2">
+            <p>
+              <span className="text-neutral-500">Artists:</span>{' '}
+              {track.artists.map((artist, index) => (
+                <span key={artist.id}>
+                  <Link
+                    to={`/artists/${artist.id}`}
+                    className="hover:underline text-white"
+                  >
+                    {artist.name}
+                  </Link>
+                  {index < track.artists.length - 1 && ', '}
+                </span>
+              ))}
+            </p>
+
+            <p>
+              <span className="text-neutral-500">Popularity:</span>{' '}
+              {track.popularity}/100
+            </p>
           </div>
         </div>
       </main>

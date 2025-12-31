@@ -10,6 +10,7 @@ class Api::TracksController < ApplicationController
     track = spotify.get("/tracks/#{track_id}")
 
     if track.present? 
+      Rails.logger.info("\n\n\n\n\nTRACK INFO: #{track.inspect}\n\n\n\n\n")
       render json: track
     else
       render json: { error: "Track not found" }, status: :not_found
